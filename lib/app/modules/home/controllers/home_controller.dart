@@ -1,39 +1,49 @@
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
 
 class HomeController extends GetxController {
-  // Add any state variables or methods needed for the home screen here
-  // For example, lists of brands or popular cars could be managed here.
-
-  final RxInt selectedBottomNavIndex = 0.obs;
-
-  void changeBottomNavIndex(int index) {
-    selectedBottomNavIndex.value = index;
-  }
-
-  // Dummy data - replace with actual data source
-  final List<Map<String, dynamic>> brands = [
-    {'name': 'Mercedes', 'logo': 'assets/icons/mercedes_logo.png', 'color': const Color(0xFFFDEEF0)},
-    {'name': 'BMW', 'logo': 'assets/icons/bmw_logo.png', 'color': const Color(0xFFE6F3E9)},
-    {'name': 'Chevrolet', 'logo': 'assets/icons/chevrolet_logo.png', 'color': const Color(0xFFE3F2FD)},
-  ];
-
-  final List<Map<String, String>> popularCars = [
-    {
-      'name': 'Tesla Model S 2020',
-      'price': '\$300',
-      'image': 'assets/images/tesla_model_s.png'
-    },
-    {
-      'name': 'Tesla Model X',
-      'price': '\$350',
-      'image': 'assets/images/tesla_model_x.png' 
-    },
-  ];
+  var selectedIndex = 0.obs;
+  var properties = <Map<String, String>>[].obs;
 
   @override
   void onInit() {
     super.onInit();
-    // Fetch initial data here
+    loadProperties();
   }
-} 
+
+  void loadProperties() {
+    properties.value = [
+      {
+        'image': 'https://images.unsplash.com/photo-1560184897-ae75f418493e',
+        'type': 'Apartment',
+        'price': '\$267000',
+        'size': '2000sqft',
+        'beds': '4',
+        'baths': '1',
+      },
+      {
+        'image': 'https://images.unsplash.com/photo-1572120360610-d971b9d7767c',
+        'type': 'Apartment',
+        'price': '\$300000',
+        'size': '1800sqft',
+        'beds': '3',
+        'baths': '2',
+      },
+      {
+        'image': 'https://images.unsplash.com/photo-1572120360610-d971b9d7767c',
+        'type': 'Apartment',
+        'price': '\$240000',
+        'size': '2200sqft',
+        'beds': '5',
+        'baths': '2',
+      },
+    ];
+  }
+
+  void select(int index) {
+    if (selectedIndex.value == index) {
+      selectedIndex.value = -1; // tekrar tıklayınca seçim kalkar
+    } else {
+      selectedIndex.value = index;
+    }
+  }
+}

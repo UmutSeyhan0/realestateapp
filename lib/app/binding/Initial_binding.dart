@@ -9,8 +9,8 @@ class InitialBinding extends Bindings {
 
   static final routes = [
     GetPage(
-      name: NavigationConstants.home,
-      page: () => const HomeScreen(),
+      name: NavigationConstants.homeView,
+      page: () => HomeView(),
       binding: HomeBinding(),
     ),
   ];

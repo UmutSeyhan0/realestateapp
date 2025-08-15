@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:realestateapp/app/widgets/inputs/app_text_field.dart';
 import 'package:realestateapp/core/components/app_text_widget.dart';
+
+import '../controllers/auth_controller.dart';
 
 class RegisterView extends StatelessWidget {
   const RegisterView({super.key});
@@ -9,6 +12,7 @@ class RegisterView extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final AuthController controller = Get.find<AuthController>();
 
     return Scaffold(
       body: Stack(
@@ -73,6 +77,7 @@ class RegisterView extends StatelessWidget {
                 Center(
                   child: AppTextWidget(
                     "Register",
+
                     style: textTheme.headlineSmall?.copyWith(
                       color: colorScheme.onSurface,
                       fontWeight: FontWeight.bold,
@@ -89,12 +94,14 @@ class RegisterView extends StatelessWidget {
                   label: "Username",
                   prefixIcon: Icon(Icons.person, color: Colors.orange),
                   iconColor: Colors.orange.shade100,
+                  controller: controller.nameController,
                 ),
                 const SizedBox(height: 15),
                 AppTextField(
                   label: "Email",
                   prefixIcon: Icon(Icons.mail, color: Colors.green),
                   iconColor: Colors.green.shade100,
+                  controller: controller.emailController,
                 ),
 
                 const SizedBox(height: 15),
@@ -102,11 +109,10 @@ class RegisterView extends StatelessWidget {
                   label: "Password",
                   prefixIcon: Icon(Icons.lock, color: Colors.blue),
                   iconColor: Colors.blue.shade100,
+                  controller: controller.passwordController,
                 ),
                 const SizedBox(height: 8),
                 const SizedBox(height: 8),
-
-                // Login Button
                 SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -118,7 +124,13 @@ class RegisterView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      controller.signUp(
+                        controller.nameController.text,
+                        controller.emailController.text,
+                        controller.passwordController.text,
+                      );
+                    },
                     child: const AppTextWidget(
                       "Register",
                       style: TextStyle(fontSize: 16),
@@ -129,7 +141,9 @@ class RegisterView extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.offAllNamed("/loginView");
+                    },
                     child: AppTextWidget(
                       "Do you have an account?",
                       style: TextStyle(

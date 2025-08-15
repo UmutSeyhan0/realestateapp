@@ -22,8 +22,6 @@ class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
     final inputDecorationTheme = Theme.of(context).inputDecorationTheme;
 
     return TextFormField(

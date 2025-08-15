@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:realestateapp/app/widgets/inputs/app_text_field.dart';
 import 'package:realestateapp/core/components/app_text_widget.dart';
+
+import '../controllers/auth_controller.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -9,6 +12,7 @@ class LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final AuthController controller = Get.find<AuthController>();
 
     return Scaffold(
       body: Stack(
@@ -88,12 +92,14 @@ class LoginView extends StatelessWidget {
                   label: "Mail",
                   prefixIcon: Icon(Icons.mail, color: Colors.green),
                   iconColor: Colors.green.shade100,
+                  controller: controller.emailController,
                 ),
                 const SizedBox(height: 15),
                 AppTextField(
                   label: "Password",
                   prefixIcon: Icon(Icons.lock, color: Colors.blue),
                   iconColor: Colors.blue.shade100,
+                  controller: controller.passwordController,
                 ),
 
                 // Forget Password
@@ -122,7 +128,12 @@ class LoginView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      controller.login(
+                        controller.emailController.text,
+                        controller.passwordController.text,
+                      );
+                    },
                     child: const AppTextWidget(
                       "Login",
                       style: TextStyle(fontSize: 16),
@@ -140,6 +151,20 @@ class LoginView extends StatelessWidget {
                         color: colorScheme.onSurface.withOpacity(0.7),
                       ),
                     ),
+                  ),
+                ),
+
+                Container(
+                  height: 50,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    color: Colors.indigo,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: GestureDetector(
+                    onTap: () {},
+
+                    child: Center(child: Text("Test")),
                   ),
                 ),
 
@@ -161,32 +186,6 @@ class LoginView extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildTextField(
-    BuildContext context, {
-    required String label,
-    required IconData icon,
-    bool obscure = false,
-  }) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        color: colorScheme.surface.withOpacity(0.6),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: TextField(
-        obscureText: obscure,
-        style: TextStyle(color: colorScheme.onSurface),
-        decoration: InputDecoration(
-          icon: Icon(icon, color: colorScheme.primary),
-          labelText: label,
-          labelStyle: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
-          border: InputBorder.none,
-        ),
       ),
     );
   }

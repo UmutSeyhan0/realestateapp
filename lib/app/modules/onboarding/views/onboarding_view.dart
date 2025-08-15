@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:realestateapp/app/controller/theme_controller.dart';
 import 'package:realestateapp/core/components/app_text_widget.dart';
 import '../controllers/onboarding_controller.dart';
 

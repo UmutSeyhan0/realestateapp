@@ -1,0 +1,30 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "realestate-e97f1",
+          "appId": "1:358358256002:android:d1a45bc6c4fad66a1b279b",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "realestate-e97f1",
+          "configurations": {
+            "android": "1:358358256002:android:d1a45bc6c4fad66a1b279b",
+            "ios": "1:358358256002:ios:9fe0509db28eba2a1b279b",
+            "macos": "1:358358256002:ios:9fe0509db28eba2a1b279b",
+            "web": "1:358358256002:web:b5ee2e6204a5a3fb1b279b",
+            "windows": "1:358358256002:web:f6d235b2179434a91b279b"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "database": "(default)",
+    "rules": "y",
+    "indexes": "y"
+  }
+}

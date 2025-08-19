@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:realestateapp/app/routes/navigation_constants.dart';
 import '../../../data/models/user_model.dart';
 import '../../../data/repository/auth_repository.dart';
 
@@ -11,6 +12,13 @@ class AuthController extends GetxController {
 
   Rx<UserModel?> currentUser = Rx<UserModel?>(null);
   RxBool isLoading = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    emailController.text = "umut@gmail.com";
+    passwordController.text = "123456";
+  }
 
   Future<void> signUp(String name, String email, String password) async {
     try {
@@ -39,7 +47,7 @@ class AuthController extends GetxController {
       currentUser.value = user;
 
       if (user != null) {
-        Get.offAllNamed("/homeView");
+        Get.offAllNamed(NavigationConstants.mainView);
       }
     } catch (e) {
       Get.snackbar("Hata", e.toString());

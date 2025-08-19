@@ -1,69 +1,90 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:uuid/uuid.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PropertyController extends GetxController {
   var type = ''.obs;
 
-  // Zorunlu alanlar
-  var title = ''.obs;
-  var description = ''.obs;
-  var price = 0.0.obs;
-  var location = ''.obs;
-  var images = <String>[].obs;
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final priceController = TextEditingController();
+  final locationController = TextEditingController();
+  final urlController = TextEditingController();
 
   // Dinamik alanlar
-  var bedrooms = 0.obs;
-  var bathrooms = 0.obs;
-  var floor = 0.obs;
-  var size = 0.0.obs;
-  var buildingAge = 0.obs;
+  final bedroomsController = TextEditingController();
+  final bathroomsController = TextEditingController();
+  final floorController = TextEditingController();
+  final sizeController = TextEditingController();
+  final buildingAgeController = TextEditingController();
   var hasElevator = false.obs;
-  var rooms = 0.obs;
+  final roomsController = TextEditingController();
   var hasParking = false.obs;
-  var landSize = 0.0.obs;
-  var zoningType = ''.obs;
+  final landSizeController = TextEditingController();
+  final zoningTypeController = TextEditingController();
 
-  // Emlak ekleme
   Future<void> addProperty() async {
-    try {
-      final uid = FirebaseAuth.instance.currentUser?.uid;
-      if (uid == null) throw 'Giriş yapılmamış!';
-
-      final id = const Uuid().v4(); // benzersiz id
-      final data = {
-        'id': id,
-        'title': title.value,
-        'description': description.value,
-        'type': type.value,
-        'price': price.value,
-        'location': location.value,
-        'ownerId': uid,
-        'images': images,
-        'createdAt': Timestamp.now(),
-
-        // Dinamik alanlar (boş değilse ekle)
-        if (bedrooms.value > 0) 'bedrooms': bedrooms.value,
-        if (bathrooms.value > 0) 'bathrooms': bathrooms.value,
-        if (floor.value > 0) 'floor': floor.value,
-        if (size.value > 0) 'size': size.value,
-        if (buildingAge.value > 0) 'buildingAge': buildingAge.value,
-        'hasElevator': hasElevator.value,
-        if (rooms.value > 0) 'rooms': rooms.value,
-        'hasParking': hasParking.value,
-        if (landSize.value > 0) 'landSize': landSize.value,
-        if (zoningType.value.isNotEmpty) 'zoningType': zoningType.value,
-      };
-
-      await FirebaseFirestore.instance
-          .collection('properties')
-          .doc(id)
-          .set(data);
-
-      Get.snackbar('Başarılı', 'Emlak eklendi');
-    } catch (e) {
-      Get.snackbar('Hata', e.toString());
+    if (urlController.text.isEmpty ||
+        titleController.text.isEmpty ||
+        descriptionController.text.isEmpty ||
+        type.value.isEmpty ||
+        priceController.text.isEmpty ||
+        locationController.text.isEmpty) {
+      Get.snackbar("Hata", "Lütfen zorunlu alanları doldurun.");
+      return;
     }
+
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) {
+      Get.snackbar("Hata", "Kullanıcı giriş yapmamış.");
+      return;
+    }
+
+    final propertyData = {
+      "id": FirebaseFirestore.instance.collection("properties").doc().id,
+      "title": titleController.text,
+      "description": descriptionController.text,
+      "type": type.value,
+      "price": double.tryParse(priceController.text) ?? 0,
+      "location": locationController.text,
+      "url": urlController.text,
+      "ownerId": userId,
+      "createdAt": Timestamp.now(),
+      "bedrooms": bedroomsController.text,
+      "bathrooms": bathroomsController.text,
+      "floor": floorController.text,
+      "size": sizeController.text,
+      "buildingAge": buildingAgeController.text,
+      "hasElevator": hasElevator.value,
+      "rooms": roomsController.text,
+      "hasParking": hasParking.value,
+      "landSize": landSizeController.text,
+      "zoningType": zoningTypeController.text,
+    };
+
+    await FirebaseFirestore.instance.collection("properties").add(propertyData);
+    Get.back();
+    Get.snackbar("Başarılı", "Emlak başarıyla eklendi.");
+    clearFields();
+  }
+
+  void clearFields() {
+    titleController.clear();
+    descriptionController.clear();
+    priceController.clear();
+    locationController.clear();
+    urlController.clear();
+    bedroomsController.clear();
+    bathroomsController.clear();
+    floorController.clear();
+    sizeController.clear();
+    buildingAgeController.clear();
+    roomsController.clear();
+    landSizeController.clear();
+    zoningTypeController.clear();
+    type.value = '';
+    hasElevator.value = false;
+    hasParking.value = false;
   }
 }

@@ -2,6 +2,8 @@ import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:realestateapp/app/modules/auth/views/login_view.dart';
 import 'package:realestateapp/app/modules/home/bindings/home_binding.dart';
 import 'package:realestateapp/app/modules/home/views/home_screen.dart';
+import 'package:realestateapp/app/modules/main/main_view.dart';
+import 'package:realestateapp/app/modules/main/main_view_binding.dart';
 import 'package:realestateapp/app/modules/onboarding/bindings/onboarding_binding.dart';
 import 'package:realestateapp/app/modules/property/views/property_add_view.dart';
 import '../modules/auth/bindings/auth_binding.dart';
@@ -37,6 +39,12 @@ class NavigationService {
       name: NavigationConstants.addProperty,
       page: () => AddPropertyView(),
       binding: PropertyBinding(),
+    ),
+
+    GetPage(
+      name: NavigationConstants.mainView,
+      page: () => ManinView(),
+      binding: MainViewBinding(),
     ),
   ];
 }

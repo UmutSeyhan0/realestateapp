@@ -1,112 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-class PropertyAddView extends GetxController {
-  var type = ''.obs;
-  var images = <String>[].obs;
-
-  final titleController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final priceController = TextEditingController();
-  final locationController = TextEditingController();
-
-  // Dinamik alanlar
-  final bedroomsController = TextEditingController();
-  final bathroomsController = TextEditingController();
-  final floorController = TextEditingController();
-  final sizeController = TextEditingController();
-  final buildingAgeController = TextEditingController();
-  var hasElevator = false.obs;
-  final roomsController = TextEditingController();
-  var hasParking = false.obs;
-  final landSizeController = TextEditingController();
-  final zoningTypeController = TextEditingController();
-
-  Future<void> addProperty() async {
-    if (images.isEmpty ||
-        titleController.text.isEmpty ||
-        descriptionController.text.isEmpty ||
-        type.value.isEmpty ||
-        priceController.text.isEmpty ||
-        locationController.text.isEmpty) {
-      Get.snackbar("Hata", "Lütfen zorunlu alanları doldurun.");
-      return;
-    }
-
-    final userId = FirebaseAuth.instance.currentUser?.uid;
-    if (userId == null) {
-      Get.snackbar("Hata", "Kullanıcı giriş yapmamış.");
-      return;
-    }
-
-    final propertyData = {
-      "id": FirebaseFirestore.instance.collection("properties").doc().id,
-      "title": titleController.text,
-      "description": descriptionController.text,
-      "type": type.value,
-      "price": double.tryParse(priceController.text) ?? 0,
-      "location": locationController.text,
-      "ownerId": userId,
-      "images": images,
-      "createdAt": Timestamp.now(),
-
-      // Dinamik alanlar
-      "bedrooms": bedroomsController.text,
-      "bathrooms": bathroomsController.text,
-      "floor": floorController.text,
-      "size": sizeController.text,
-      "buildingAge": buildingAgeController.text,
-      "hasElevator": hasElevator.value,
-      "rooms": roomsController.text,
-      "hasParking": hasParking.value,
-      "landSize": landSizeController.text,
-      "zoningType": zoningTypeController.text,
-    };
-
-    await FirebaseFirestore.instance.collection("properties").add(propertyData);
-
-    Get.snackbar("Başarılı", "Emlak başarıyla eklendi.");
-    clearFields();
-  }
-
-  void clearFields() {
-    titleController.clear();
-    descriptionController.clear();
-    priceController.clear();
-    locationController.clear();
-    bedroomsController.clear();
-    bathroomsController.clear();
-    floorController.clear();
-    sizeController.clear();
-    buildingAgeController.clear();
-    roomsController.clear();
-    landSizeController.clear();
-    zoningTypeController.clear();
-    images.clear();
-    type.value = '';
-    hasElevator.value = false;
-    hasParking.value = false;
-  }
-}
+import 'package:realestateapp/app/modules/property/controllers/property_controller.dart';
 
 class AddPropertyView extends StatelessWidget {
-  final controller = Get.put(PropertyAddView());
-
-  final List<String> propertyTypes = ["home", "apartment", "office", "land"];
-
   AddPropertyView({super.key});
+  final propertyTypes = ["home", "apartment", "office", "land"];
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(PropertyController());
+
     return Scaffold(
       appBar: AppBar(title: const Text("Emlak Ekle")),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // Zorunlu Alanlar
             TextField(
               controller: controller.titleController,
               decoration: const InputDecoration(labelText: "Başlık"),
@@ -124,7 +33,11 @@ class AddPropertyView extends StatelessWidget {
               controller: controller.locationController,
               decoration: const InputDecoration(labelText: "Lokasyon"),
             ),
-
+            TextField(
+              controller: controller.urlController,
+              keyboardType: TextInputType.url,
+              decoration: const InputDecoration(labelText: "URL"),
+            ),
             const SizedBox(height: 10),
             Obx(
               () => DropdownButton<String>(
@@ -132,18 +45,13 @@ class AddPropertyView extends StatelessWidget {
                     ? null
                     : controller.type.value,
                 hint: const Text("Emlak Tipi Seç"),
-                items: propertyTypes.map((type) {
-                  return DropdownMenuItem(value: type, child: Text(type));
-                }).toList(),
-                onChanged: (value) {
-                  controller.type.value = value ?? '';
-                },
+                items: propertyTypes
+                    .map((t) => DropdownMenuItem(value: t, child: Text(t)))
+                    .toList(),
+                onChanged: (v) => controller.type.value = v ?? '',
               ),
             ),
-
             const SizedBox(height: 20),
-
-            // Dinamik Alanlar
             Obx(() {
               switch (controller.type.value) {
                 case "home":
@@ -235,7 +143,6 @@ class AddPropertyView extends StatelessWidget {
                   return const SizedBox();
               }
             }),
-
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: controller.addProperty,

@@ -3,5 +3,6 @@ class NavigationConstants {
   static const loginView = "/loginView";
   static const registerView = "/registerView";
   static const homeView = "/homeView";
+  static const mainView = "/mainView";
   static const addProperty = "/addPropertyView";
 }
